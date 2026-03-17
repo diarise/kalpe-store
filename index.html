@@ -866,7 +866,7 @@
 const CONFIG = {
   // ⚠️  Replace with your actual Kalpé function endpoint
   // Format: https://[your-app-domain]/functions/getStorefrontFeed
-  feedUrl: 'https://kalpe.app/functions/getStorefrontFeed'
+  feedUrl: 'https://kalpe.app/functions/getStorefrontFeed',
   storeSlug: 'kalpe-store',
   fallbackBrand: 'Kalpé',
   fallbackPrimary: '#0096D6',
@@ -1118,7 +1118,7 @@ function setCategory(cat, pill) {
 
 // ─── SORT & FILTER ────────────────────────────────────────────────────────────
 function applySortAndFilter() {
-  let filtered = (activeCategory === 'all' || !activeCategory)
+  let filtered = activeCategory === 'all'
     ? [...allProducts]
     : allProducts.filter(p => p.category === activeCategory);
 
@@ -1272,26 +1272,13 @@ async function init() {
     storeData = data.store;
     allProducts = data.products || [];
 
-    if (data.store) applyStoreData(data.store, data.meta || {});
-if (allProducts.length > 0) {
-  buildFeaturedSection(allProducts);
-  buildCategoryPills(allProducts);
-}
+    applyStoreData(data.store, data.meta);
+    buildFeaturedSection(allProducts);
+    buildCategoryPills(allProducts);
 
     // Hide skeletons, show grid
     document.getElementById('skeletonGrid').style.display = 'none';
-    // renderProductGrid(allProducts);
-    renderProductGrid([
-  {
-    id: "test",
-    name: "Test Product",
-    price: 10000,
-    currency_symbol: "CFA",
-    image_url: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400",
-    in_stock: true,
-    is_featured: true
-  }
-]);
+    renderProductGrid(allProducts);
 
     // Fade-in sections
     document.querySelectorAll('.fade-in').forEach(el => {
@@ -1319,16 +1306,6 @@ if (allProducts.length > 0) {
     }, 400);
   }
 }
-
-
-// fetch("https://kalpe.app/functions/getStorefrontFeed", {
-//   method: "POST",
-//   headers: { "Content-Type": "application/json" },
-//   body: JSON.stringify({ store_slug: "kalpe-store" })
-// }).then(r => r.json()).then(console.log).catch(console.error)
-
-
-console.log("Rendering products:", allProducts);
 
 // Start
 init();
